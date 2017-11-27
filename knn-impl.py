@@ -20,8 +20,8 @@ def k_nearest_neighbors(data, predict, k=3):
     vote_result = Counter(votes).most_common(1)[0][0]
     confidence = Counter(votes).most_common(1)[0][1] / k
 
-    print(Counter(votes).most_common(1))
-    print(confidence)
+    #print(Counter(votes).most_common(1))
+    #print(confidence)
     return vote_result
 
 def get_cuisine(cuisine):
