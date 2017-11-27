@@ -1,0 +1,54 @@
+##test_size = 0.2
+##train_set = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[], 13:[], 14:[], 15:[], 16:[], 17:[], 18:[], 19:[], 20:[]}
+##test_set = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[], 13:[], 14:[], 15:[], 16:[], 17:[], 18:[], 19:[], 20:[]}
+##train_data = full_data[:-int(test_size*len(full_data))]
+##test_data = full_data[-int(test_size*len(full_data)):]
+##
+##for i in train_data:
+##    train_set[i[-1]].append(i[:-1])
+##    
+##for i in test_data:
+##    test_set[i[-1]].append(i[:-1])
+##
+##correct = 0
+##total = 0
+##
+##print("Classifying...")
+##for group in test_set:
+##    for data in test_set[group]:
+##        vote = k_nearest_neighbors(train_set, data, k=35)
+##        if group == vote:
+##            correct += 1
+##        total += 1
+##print('Accuracy: ', correct/total)
+##
+##
+##
+##
+##
+##
+##
+###print(full_data[1])
+#print(full_data[2])
+##new_row = copy.deepcopy(ing)
+##count = 0
+##
+##modified = []
+##for data in full_data[0]:
+##    print(data)
+##    if type(data) is str:
+##        modified.append(data[1:-1])
+##    count += 1
+##
+##count = 0
+##
+##print(modified)
+##for ingredient in new_row:
+##    if ingredient in modified:
+##        new_row[count] = 1
+##        count += 1
+##    else:
+##        new_row[count] = 0
+##        count += 1
+##
+##print(ing)
