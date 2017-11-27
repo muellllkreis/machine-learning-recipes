@@ -6,7 +6,6 @@ import pandas as pd
 import random
 from random import randrange
 import copy
-from scipy.spatial.distance import cdist
 
 def k_nearest_neighbors(data, predict, k=3):
     if len(data) >= k:
@@ -16,7 +15,6 @@ def k_nearest_neighbors(data, predict, k=3):
         for features in data[group]:
             euclidean_distance = np.linalg.norm(np.array(features) - np.array(predict))
             distances.append([euclidean_distance, group])
-        #euclidean_distance = cdist(group, predict, metric='cosine')
 
     votes = [i[1] for i in sorted(distances)[:k]]
     vote_result = Counter(votes).most_common(1)[0][0]
@@ -75,7 +73,6 @@ print("Parsing ingredients (features)...")
 ing = pd.read_csv("ingredients.txt", header=None)
 ing = ing.values.tolist()
 print("Done.")
-#print(ing)
 
 ## Get Training Set
 print("Preparing DataSet...")
@@ -84,14 +81,8 @@ with open("training.csv", 'r') as f:
     for line in f:
         df = pd.concat( [df, pd.DataFrame([tuple(line.strip().split(','))])], ignore_index=True )
 
-#df.replace('what to replace', what value, inplace = true)
-
 ## Drop ID Column
 df.drop(0, 1, inplace = True)
-
-#print(df.ix[254])
-#print(df.ix[100])
-#print(df.head)
 
 ## Data to Array
 full_data = df.values.tolist()
@@ -109,49 +100,29 @@ for row in full_data:
     full_data[count] = modified
     count += 1
         
-print(full_data[0])
-
 rowcount = 0
 tmpperc = -1
 for row in full_data:
     cuisine = row[0]
-##    print(row[0])
-##    print(row[1])
     new_row = copy.deepcopy(ing)
     datacount = 0
     for ingredient in new_row:
         if ingredient[0] in row:
-            #print("here")
             new_row[datacount] = 1
             datacount += 1
         else:
             new_row[datacount] = 0
             datacount += 1
-    #full_data[rowcount] = np.append(new_row, get_cuisine(cuisine))
     full_data[rowcount] = new_row
     full_data[rowcount].append(get_cuisine(cuisine))
     rowcount += 1
-    ######################## DELETE THIS FOR FULL DATA
-    ##if(rowcount == 4):
-    ##    break;
-    ###################################################
     percentage = int((rowcount+1)/1794*100)
     if not tmpperc == percentage:
-        print('{}{}{}'.format("Parsing dataset... ", int((rowcount+1)/1794*100), "% \r"))
+        print('{}{}{}'.format("Parsing dataset... ", int((rowcount+1)/1794*100), "% \r"), end='')
     tmpperc = percentage
 
-##
-###print(full_data)
-##for i in full_data[0]:
-##    print(i)
-###print(full_data[0])
-##print("###########################################################################")
-##for i in full_data[1]:
-##    print(i)
-
+print("")
 random.shuffle(full_data)
-
-#print(full_data[:1])
 
 def cross_validation_split(dataset, folds=6):
 	dataset_split = list()
@@ -166,12 +137,10 @@ def cross_validation_split(dataset, folds=6):
 	return dataset_split
 
 folds = cross_validation_split(full_data)
-##for i in folds:
-##    print(len(i))
 
 print("Running cross validation...")
 for run in range(6):
-    print("Validating with Fold", run+1)
+    print("Validating with Fold", run+1, "...")
     train_data = []
     test_data = folds[run]
     train_set = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[], 13:[], 14:[], 15:[], 16:[], 17:[], 18:[], 19:[], 20:[]}
@@ -196,62 +165,42 @@ for run in range(6):
             if group == vote:
                 correct += 1
             total += 1
+    print(30*"-")
     print('Accuracy: ', correct/total)
     print('Generalization Error: ', 1/len(test_data) * (total-correct))
-    print(30*'#')
+    print(30*'-')
 
-    
-##test_size = 0.2
-##train_set = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[], 13:[], 14:[], 15:[], 16:[], 17:[], 18:[], 19:[], 20:[]}
-##test_set = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[], 13:[], 14:[], 15:[], 16:[], 17:[], 18:[], 19:[], 20:[]}
-##train_data = full_data[:-int(test_size*len(full_data))]
-##test_data = full_data[-int(test_size*len(full_data)):]
-##
-##for i in train_data:
-##    train_set[i[-1]].append(i[:-1])
-##    
-##for i in test_data:
-##    test_set[i[-1]].append(i[:-1])
-##
-##correct = 0
-##total = 0
-##
-##print("Classifying...")
-##for group in test_set:
-##    for data in test_set[group]:
-##        vote = k_nearest_neighbors(train_set, data, k=35)
-##        if group == vote:
-##            correct += 1
-##        total += 1
-##print('Accuracy: ', correct/total)
-##
-##
-##
-##
-##
-##
-##
-###print(full_data[1])
-#print(full_data[2])
-##new_row = copy.deepcopy(ing)
-##count = 0
-##
-##modified = []
-##for data in full_data[0]:
-##    print(data)
-##    if type(data) is str:
-##        modified.append(data[1:-1])
-##    count += 1
-##
-##count = 0
-##
-##print(modified)
-##for ingredient in new_row:
-##    if ingredient in modified:
-##        new_row[count] = 1
-##        count += 1
+##inp = ""
+##query = []
+##print("Do you want to test an input against the whole training set? \n If yes, start entering ingredients and type \"done\" when finished. \n If not, just type \"done\"")
+##while not inp == "done":
+##    inp = input("Enter ingredient: ")
+##    if inp == "done":
+##          break
 ##    else:
-##        new_row[count] = 0
-##        count += 1
+##          query.append(inp)
+##          print(query)
 ##
-##print(ing)
+##if not len(query) == 0:
+##    new_row = copy.deepcopy(ing)
+##    datacount = 0
+##    for ingredient in new_row:
+##        if ingredient[0] in query:
+##            new_row[datacount] = 1
+##            datacount += 1
+##        else:
+##            new_row[datacount] = 0
+##            datacount += 1
+##    new_row.append(get_cuisine("brazilian"))
+##    train_data = full_data
+##    test_data = [new_row]
+##    print(test_data)
+##    train_set = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[], 13:[], 14:[], 15:[], 16:[], 17:[], 18:[], 19:[], 20:[]}
+##    test_set = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[], 10:[], 11:[], 12:[], 13:[], 14:[], 15:[], 16:[], 17:[], 18:[], 19:[], 20:[]}
+##    for i in train_data:
+##        train_set[i[-1]].append(i[:-1])
+##    for i in test_data:
+##        test_set[i[-1]].append(i[:-1])
+##    for group in test_set:
+##        for data in test_set[group]:
+##            print("I guess the cuisine is...", k_nearest_neighbors(train_set, data, k=49))
