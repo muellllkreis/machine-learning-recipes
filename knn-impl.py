@@ -139,6 +139,8 @@ def cross_validation_split(dataset, folds=6):
 folds = cross_validation_split(full_data)
 
 print("Running cross validation...")
+gen_errors = []
+accuracy = []
 for run in range(6):
     print("Validating with Fold", run+1, "...")
     train_data = []
@@ -167,8 +169,13 @@ for run in range(6):
             total += 1
     print(30*"-")
     print('Accuracy: ', correct/total)
+    accuracy.append(correct/total)
     print('Generalization Error: ', 1/len(test_data) * (total-correct))
+    gen_errors.append(1/len(test_data) * (total-correct))
     print(30*'-')
+
+print("Estimated Overall Accuracy:", np.mean(accuracy))
+print("Estimated Overall Generalization Error:", np.mean(gen_errors))
 
 ##inp = ""
 ##query = []
